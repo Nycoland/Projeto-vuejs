@@ -52,7 +52,7 @@
         align-items: center;
         justify-content: center;
         height: 100vh;
-        background-color:  #f5f5f5;
+        background-color:  #ffcbef;
   }
     .form-container {
         width: 300px;
