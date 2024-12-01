@@ -24,7 +24,7 @@
          hide-details="auto"
         ></v-text-field>
   
-        <v-btn class="submit-bnt mt-4" type="submit" block>Entrar</v-btn>
+        <v-btn class="cadastrar mt-4" type="submit" v-size="small">Entrar</v-btn>
       </v-form>
     </v-sheet>
   </template>
@@ -55,15 +55,15 @@
         background-color:  #ffcbef;
   }
     .form-container {
-        width: 300px;
-        color: #000000;
-        padding: 20px;
-        border-radius: 12px;
-        background-color:#ffffff;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
+          width: 300px;
+          color: #000000;
+          padding: 20px;
+          border-radius: 12px;
+          background-color:#ffffff;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
     }
 
 
@@ -82,13 +82,15 @@
     }
 
 
-    .submit-bnt {
+    .cadastrar {
         background-color: #ffcbef;
         color: #000000;
         font-weight: bold;
         border-radius: 16px;
         border: solid 1.5px;
         border-color: #000000;
+        height: 10px;
+        width: 20px;
     }
 
     .submit-bnt:hover {
