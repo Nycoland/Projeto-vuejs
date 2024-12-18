@@ -1,6 +1,8 @@
 <template>
     <v-sheet class="form-wrapper">
+      <h2 class="welcome-text">Ebaaa, estamos felizes por ter você aqui</h2>
       <v-form class="form-container" fast-fail @submit.prevent>
+      
         <v-text-field
           v-model="email"
           :rules="emailRules"
@@ -24,7 +26,7 @@
          hide-details="auto"
         ></v-text-field>
   
-        <v-btn class="submit-bnt mt-4" type="submit" block>Entrar</v-btn>
+        <v-btn class="submit-bnt mt-4" type="submit" block to="/homee">Entrar</v-btn>
       </v-form>
     </v-sheet>
   </template>
@@ -46,13 +48,24 @@
     }
   </script>
 
-  <style scoped>
-    .form-wrapper {
+
+
+<style scoped>
+
+  .welcome-text {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: #000000;
+    margin-bottom: 20px;
+  }
+  .form-wrapper {
         display: flex;
         align-items: center;
         justify-content: center;
         height: 100vh;
         background-color:  #ffcbef;
+        flex-direction: column;
   }
     .form-container {
         width: 300px;
@@ -96,3 +109,44 @@
     }
 
 </style>
+
+<script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { supabase } from '@/composables/supabase';
+
+// Estados reativos
+const visible = ref(false); // Para um campo de senha visível (se necessário)
+const email = ref(''); // Inicializando com string vazia
+const senha = ref('');
+const snackbar = ref(false);
+const feedback = ref('');
+const router = useRouter();
+
+// Função de login
+async function logIn() {
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email.value,
+      password: senha.value,
+    });
+
+    if (error) {
+      feedback.value = `Erro ao registrar login: ${error.message}`;
+      snackbar.value = true;
+    } else if (data.session) {
+      feedback.value = 'Logado com sucesso!';
+      snackbar.value = true;
+
+      // Redireciona para a página principal após 1 segundo
+      setTimeout(() => {
+        router.push('/');
+      }, 1000);
+    }
+  } catch (err) {
+    console.error('Erro:', err);
+    feedback.value = 'Erro ao registrar login.';
+    snackbar.value = true;
+  }
+}
+</script>
