@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <AppHeader></AppHeader>
       <div class="total"> 
       <v-form v-model="valid">
@@ -459,3 +459,4 @@
   
   
   </style>
+-->

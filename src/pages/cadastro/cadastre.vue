@@ -8,15 +8,7 @@
          
         <v-container class="mt-10">
           <v-container class="text-left ">
-            <h2 >Caso voce queira ser um aliado, escolha a opção aliado</h2>
-            <v-switch 
-            v-model="model"
-            :label="`Switch: ${model.toString()}`">
-            false-value="no"
-            true-value="yes"
-            hide-details
-            inset
-            </v-switch>
+          
             <!-- cadastro -->
 
             <h2>CADASTRO ALIADO</h2>
@@ -252,70 +244,92 @@
 </div> 
   <AppFooter></AppFooter>
     </template>
-<script>
-import AppHeader from '@/components/AppHeader.vue';
-import AppFooter from '@/components/AppFooter.vue';
+<script setup>
+import {onMounted, ref} from 'vue';
+import {supabase} from "@/composables/supabase"
+import {useRouter} from 'vue-router';
 
-  export default {
-    data: () => ({
-      model:'yes',
-      valid: false,
-      nomecompleto: '',
-      nameRules: [
-        value => {
-          if (value) return true
-          
-          return 'Nome completo é necessário'
-        },
-        value => {
-          if (value?.length <= 10) return true
-          
-          return 'Nome precisa ter pelo menos 10 letras.'
-        },
-      ],
-      senha:'',
-      senhaRules: [
-        value => {
-          if (value) return true
-          
-          return 'Senha é nessecária'
-        },
-        value => {
-          if (value?.length <= 10) return true
-          
-          return 'A senha precisa ter pelo menos 10 caracteres.'
-        },
-      ],
-      confSenhasenha:'',
-      confsenhaRules: [
-        value => {
-          if (value) return true
-          
-          return 'Confirme a senha.'
-        },
-        value => {
-          if (value?.length <= 10) return true
-          
-          return 'A senha precisa ser a mesma.'
-        },
-      ],
-      email: '',
-      emailRules: [
-        value => {
-          if (value) return true
+const nomeCompleto = ref();
+const cpf = ref();
+const dataNascimento = ref();
+const email = ref();
+const senha = ref();
+const confSenha = ref();
+const celular = ref();
+const bairro = ref();
+const cep = ref();
+const numero = ref();
+const logradouro = ref();
+const referencia = ref();
+const complemento = ref();
+const visivel = ref(false);
 
-          return 'E-mail é necessário.'
-        },
-        value => {
-          if (/.+@.+\..+/.test(value)) return true
+const snackbar = ref(false);
+const text = ref();
+const router = useRouter();
 
-          return 'E-mail precisa ser válido.'
-        },
-      ],
-    }),
-  }
+async function add(){
+    try{
+        const {data, error} = await supabase.auth.signUp({
+            email: email.value,
+            password: senha.value
+        });
+        if (error){
+            console.error("Erro ao cadastrar usuário:", error.message);
+            text.value = "Erro ao cadastrar usuário:" + error.message;
+            snackbar.value = true;
+            return;
+        }
+        const {error: profileError} = await supabase
+        .from("profiles")
+        .insert([
+            {
+                id: data.user.id,
+                nomeCompleto: nomeCompleto.value,
+                cpf: cpf.value,
+                dataNascimento: dataNascimento.value,
+                celular: celular.value,
+                bairro: bairro.value,
+                cep: cep.value,
+                numero: numero.value,
+                logradouro: logradouro.value,
+                referencia: referencia.value,
+                complemento: complemento.value
+            }
+        ]);
+        if (profileError){
+            console.error("Erro ao cadastrar perfil:", profileError.message);
+            text.value = "Erro ao cadastrar perfil:" + profileError.message;
+            snackbar.value = true;
+            return;
+        }
+        nomeCompleto.value = '';
+        cpf.value = '';
+        dataNascimento.value = '';
+        celular.value = '';
+        bairro.value = '';
+        cep.value = '';
+        numero.value = '';
+        logradouro.value = '';
+        referencia.value = '';
+        complemento.value = '';
+        email.value = '';
+        senha.value = '';
+        confSenha.value = '';
 
+        text.value = " Cadastrado com sucesso!!";
+        snackbar.value = true;
 
+        setTimeout(() => {
+            router.push("/login");
+        }, 1000);
+    } catch(error){
+        console.error("Erro inesperado ao cadastrar:", error);
+        text.value = "Erro:" + error.message;
+        snackbar.value = true;
+    }
+}
+onMounted(() => {});
 </script>
 
 <style scoped>
@@ -337,10 +351,10 @@ import AppFooter from '@/components/AppFooter.vue';
         color: #ffcbef;
         box-sizing: border-box;
         width: 900px;
-        height: 1250px;
+        height: 1150px;
         align-items: center;
         display:flex;
-        padding: 8px 12px 70px;
+        padding: 8px 12px 60px;
     
     }
   html,body{
