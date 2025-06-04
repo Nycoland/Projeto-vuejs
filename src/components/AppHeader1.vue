@@ -1,21 +1,62 @@
 <template>
-    <v-container>
-      <v-app-bar class="header" color="#a9b0ff">
-        <v-toolbar-title class="d-flex align-center justify-start">
-          <span class="bold-title font-weight-bold">SMILING FRIENDS</span>
-          <v-icon icon="mdi-paw" class="ml-3" size="24"></v-icon>
-        </v-toolbar-title>
-        <v-spacer></v-spacer> <v-btn rounded outlined class="mx-2 btn-text-uppercase elevation-2" to="cadastro/cadastre1">CADASTRE-SE</v-btn>
-        <v-btn rounded outlined class="mx-2 btn-text-uppercase elevation-2" to="cadastro/login">ENTRAR</v-btn>
-      </v-app-bar>
-    </v-container>
+ <div>
+    <!-- Barra de Navegação -->
+    <v-app-bar flat color="white" height="64">
+      <!-- Ícone e Título à esquerda -->
+      <div class="d-flex align-center">
+        <v-icon size="28" class="mr-3 ml-3" color="#7681f8">mdi-paw</v-icon>
+        <span class="title">Smiling Friends</span>
+      </div>
+
+      <v-spacer></v-spacer>
+
+      <v-btn to="/PagInicial">
+        <v-icon left>mdi-home</v-icon>
+        HOME
+      </v-btn>
+
+      <v-btn to="./home1/clinicas">
+        <v-icon left>mdi-hospital-box</v-icon>
+        CLÍNICAS
+      </v-btn>
+
+      <v-btn to="./home1/ongs">
+        <v-icon left>mdi-heart</v-icon>
+        ONGS
+      </v-btn>
+
+      <v-btn to="./home1/doencas">
+        DOENÇAS
+      </v-btn>
+
+      <!-- Botões com borda -->
+      <v-btn color="#7681f8" variant="outlined" class="ml-4 mr-4" to="./login/login">
+        ENTRAR
+      </v-btn>
+
+      <v-btn color="#7681f8" to="./cadastro/cadastre">
+        CADASTRAR
+      </v-btn>
+    </v-app-bar>
+  </div>
+
   </template>
+
+
 <style scoped>
 .btn-text-uppercase{
   font-weight: bold;
   text-transform: uppercase;
   background-color: #ffcbef;
   border: 1.5px solid;
+}
+
+.title{
+  /* font-size: 30px; */
+  color: #7681f8;
+  font-weight:bold; 
+  text-align: center;
+  font-size: 20px;
 }
 
 </style>

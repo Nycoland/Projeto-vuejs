@@ -2,7 +2,7 @@
        <v-container>
       <v-app-bar class="header" color="#a9b0ff">
         <v-toolbar-title class="d-flex align-center justify-start">
-          <span class="bold-title font-weight-bold">SMILING FRIENDS</span>
+          <span class="bold-title font-weight-bold">SMILLING FRIENDS</span>
           <v-icon icon="mdi-paw" class="ml-3" size="24"></v-icon>
         </v-toolbar-title>
         <v-spacer></v-spacer> <v-btn rounded outlined class="mx-2 btn-text-uppercase elevation-2" to="index">HOME</v-btn>

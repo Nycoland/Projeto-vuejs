@@ -246,7 +246,6 @@
     </template>
 <script setup>
 import {onMounted, ref} from 'vue';
-import {supabase} from "@/composables/supabase"
 import {useRouter} from 'vue-router';
 
 const nomeCompleto = ref();
