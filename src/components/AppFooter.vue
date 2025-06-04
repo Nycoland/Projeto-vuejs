@@ -1,20 +1,17 @@
 <template>
-  <footer class="custom-footer">
+  <v-footer>
     <v-container>
-      <v-row justify="center">
-        <v-col class="text-center white--text footer-text" cols="12" sm="8" md="6">
-          © 2024 - SUNSHINE - TODOS OS DIREITOS RESERVADOS
-          <p>Contato: <a href="mailto:contato@smilingfriends.com" class="footer-link">contato@smilingfriends.com</a></p>
-            <div class="social-icons">
-              <v-icon class="mx-2">mdi-instagram</v-icon>
-              <v-icon class="mx-2">mdi-github</v-icon>
-              <v-icon class="mx-2">mdi-linkedin</v-icon>
-            </div>
+      <v-row>
+        <v-col cols="12" md="4">
+          <h3 class="mb-3">Smilling Friends</h3>
+          <p>Conectanto tutores aos aos melhores cuidados com seus pets</p>
+        </v-col>
+        <v-col cols="12" md="4">
+          <h4>Contato</h4>
         </v-col>
       </v-row>
     </v-container>
-  </footer>
-
+  </v-footer>
 </template>
 <style cooper>
 .custom-footer {

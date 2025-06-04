@@ -22,20 +22,20 @@
         </div>
         <div class="img1">
           <v-container>
-            <v-img 
+            <!-- <v-img 
             src="C:\Users\annek\SmileFriends-ak\Projeto-vuejs\src\assets\animais1.jpg"
             width="550px"
             aspect-ratio="16/9"
-            ></v-img>
+            ></v-img> -->
           </v-container>
         </div>
         <div class="img">
           <v-container>
-            <v-img
+            <!-- <v-img
             src="C:\Users\annek\SmileFriends-ak\Projeto-vuejs\src\assets\animais.jpg"
             width="700"
             aspect-ratio="16/9"
-            ></v-img>
+            ></v-img> -->
           </v-container>
         </div>
         
@@ -52,11 +52,11 @@
           </div>
           <div class="img5">
           <v-container>
-            <v-img
+            <!-- <v-img
             src="C:\Users\annek\SmileFriends-ak\Projeto-vuejs\src\assets\animal5.jpg"
             width="700"
             aspect-ratio="16/9"
-            ></v-img>
+            ></v-img> -->
           </v-container>
         </div>
             <div class="quadrado2">
@@ -66,10 +66,10 @@
                   Quem Somos Nós
                 </v-card-title  >
                 <div class="imgs">
-                  <v-img class="imga"
+                  <!-- <v-img class="imga"
                   src="C:\Users\annek\SmileFriends-ak\Projeto-vuejs\src\assets\anne.jpg"
                   width="400"
-                  ></v-img>
+                  ></v-img> -->
                 </div>
                 <v-spacer></v-spacer>
 

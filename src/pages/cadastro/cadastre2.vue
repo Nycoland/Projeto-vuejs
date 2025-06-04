@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
     <AppHeader></AppHeader>
       <div class="total"> 
       <v-form v-model="valid">
@@ -17,7 +17,7 @@
               hide-details
               inset
               </v-switch>
-              <!-- cadastro -->
+              <!-- cadastro  -->
   
               <h2>DADOS DA ONG</h2>
         </v-container>
