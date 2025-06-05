@@ -7,12 +7,13 @@
 // Composables
 import { createRouter, createWebHistory } from 'vue-router';
 import Login from '@/login/login.vue'; 
-import Cadastro from '@/pages/cadastro/cadastre.vue';
 import Cadastre from '@/pages/cadastro/cadastre2.vue';
 import Home from '@/pages/home1/home.vue';
 import Clinicas from '@/pages/home1/clinicas.vue';
 import Doencas from '@/pages/home1/doencas.vue';
 import PagInicial from '@/pages/PagInicial.vue';
+// import Ongs from '@/pages/home1/ongs.vue';
+
 
 const routes = [
   {
@@ -21,13 +22,7 @@ const routes = [
     component: Login, // Nome do componente importado
   },
   {
-    path: '/cadastro/cadastre',
-    name: 'Cadastro',
-    component: Cadastro,
-  },
-
-  {
-    path: '/cadastre',
+    path: '/cadastro/cadastre2',
     name: 'Cadastre',
     component: Cadastre,
   },
@@ -42,7 +37,7 @@ const routes = [
     component: Clinicas,
   },
     {
-    path: '/doencas',
+    path: '/home1/doencas',
     name: 'Doencas',
     component: Doencas,
   },
@@ -51,11 +46,11 @@ const routes = [
     name: 'Pagina inicial',
     component: PagInicial,
   },
-    {
-    path: '/home1/clinicas',
-    name: 'Clinicas',
-    component: Clinicas,
-  },
+  //   {
+  //   path: '/home1/ongs',
+  //   name: 'Ongs',
+  //   component: Ongs,
+  // },
   //   {
   //   path: '/home',
   //   name: 'Home',

@@ -1,5 +1,5 @@
 <template>
-  <AppHeader2></AppHeader2>
+  <AppHeader1></AppHeader1>
   <v-main class="main-background">
     <botao></botao>
     <!-- ONG1 -->

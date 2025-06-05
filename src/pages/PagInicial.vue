@@ -1,5 +1,4 @@
 <template>
-  <v-app>
  <AppHeader1></AppHeader1>
     <v-main class="main-background">
       <section class="cardVue">
@@ -106,12 +105,18 @@
         </v-container>
       </section>
       </v-main>
-      <!-- <AppFooter></AppFooter> -->
-    </v-app>
+      <AppFooter></AppFooter>
+    
 </template>
 
 <script setup>
-//
+import axios from 'axios';
+
+// axios.get()
+// .then((response) =>{
+//   console.log(response)
+// })
+
 </script> 
 
 <style scoped>
