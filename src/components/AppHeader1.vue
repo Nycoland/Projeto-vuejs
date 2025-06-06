@@ -1,7 +1,7 @@
 <template>
  <div>
     <!-- Barra de Navegação -->
-    <v-app-bar flat color="white" height="64">
+    <v-app-bar flat color="white" height="64" elevation="3">
       <!-- Ícone e Título à esquerda -->
       <div class="d-flex align-center">
         <v-icon size="28" class="mr-3 ml-3" color="#7681f8">mdi-paw</v-icon>
@@ -10,7 +10,7 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn to="/PagInicial">
+      <v-btn to="./">
         <v-icon left>mdi-home</v-icon>
         HOME
       </v-btn>
@@ -20,10 +20,10 @@
         CLÍNICAS
       </v-btn>
 
-      <v-btn to="./home1/ongs">
+      <!-- <v-btn to="./home1/ongs">
         <v-icon left>mdi-heart</v-icon>
         ONGS
-      </v-btn>
+      </v-btn> -->
 
       <v-btn to="./home1/doencas">
         DOENÇAS

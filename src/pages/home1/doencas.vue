@@ -1,121 +1,115 @@
 <template>
-  <AppHeader2></AppHeader2>
-  <v-main class="main-background">
-    <v-data-iterator :items="doencas" item-value="name">
-      <template v-slot:default="{ items, isExpanded, toggleExpand }">
-        <v-row>
-          <v-col
-            v-for="item in items"
-            :key="item.raw.name"
-            cols="12"
-            md="6"
-            sm="12"
-          >
-            <v-card class="card1">
-              <v-card-title class="d-flex align-center">
-                <h4>{{ item.raw.name }}</h4>
-              </v-card-title>
+  <div>
+    <AppHeader1 />
+    <v-main class="main-background">
+      <div v-if="currentSection === 'doencas'">
+        <v-container class="py-8">
+          <h1 class="text-h3 font-weight-bold mb-6 text-black">
+            <v-icon class="mr-1" color="#7681f8">mdi-alert</v-icon>
+            Guia de Doenças
+          </h1>
+          
+          <v-row>
+            <v-col v-for="disease in diseases" :key="disease.id" cols="12" md="6" lg="4">
+              <v-card class="card-disease h-100" elevation="6" rounded="lg">
+                <v-card-title class="bg-orange-lighten-4 d-flex align-center py-4">
+                  <v-icon color="orange-darken-2" size="28" class="mr-3">mdi-alert</v-icon>
+                  <span class="text-h5 font-weight-bold">{{ disease.name }}</span>
+                </v-card-title>
+                
+                <v-card-text class="pa-5">
+                  <div class="mb-5">
+                    <div class="d-flex align-center mb-2">
+                      <v-icon color="orange" class="mr-2">mdi-clipboard-list-outline</v-icon>
+                      <h3 class="text-h6 font-weight-medium">Sintomas:</h3>
+                    </div>
+                    <v-list density="compact" class="bg-transparent">
+                      <v-list-item
+                        v-for="(symptom, index) in disease.symptoms"
+                        :key="index"
+                        class="pl-8 text-black"
+                      >
+                        <template v-slot:prepend>
+                          <v-icon color="orange-lighten-1" size="small">mdi-circle-small</v-icon>
+                        </template>
+                        <v-list-item-title>{{ symptom }}</v-list-item-title>
+                      </v-list-item>
+                    </v-list>
+                  </div>
 
-              <v-card-text class="texto">
-                {{ item.raw.description }}
-              </v-card-text>
+                  <div>
+                    <div class="d-flex align-center mb-2">
+                      <v-icon color="orange" class="mr-2">mdi-shield-check</v-icon>
+                      <h3 class="text-h6 font-weight-medium">Prevenção:</h3>
+                    </div>
+                    <p class="text-body-1 pl-8">
+                      {{ disease.prevention }}
+                    </p>
+                  </div>
+                </v-card-text>
 
-              <div class="px-4">
-                <v-switch
-                  :label="`${isExpanded(item) ? 'Ver menos' : 'Sintomas'}`"
-                  :model-value="isExpanded(item)"
-                  density="compact"
-                  inset
-                  color="#ca399e"
-                  @click="() => toggleExpand(item)"
-                ></v-switch>
-              </div>
-
-              <v-divider></v-divider>
-
-              <v-expand-transition>
-                <div v-if="isExpanded(item)">
-                  <v-list :lines="false" density="default" class="lista">
-                    <v-list-item
-                      v-for="(phraseKey, index) in Object.keys(item.phrases)"
-                      :key="index"
-                      :title="getPhrase(item, phraseKey)"
-                      :active="index === 0"
-                    ></v-list-item>
-                  </v-list>
-                </div>
-              </v-expand-transition>
-            </v-card>
-          </v-col>
-        </v-row>
-      </template>
-    </v-data-iterator>
-  </v-main>
-  <AppFooter></AppFooter>
+                <v-card-actions class="px-4 pb-4 justify-space-between">
+                  <v-btn
+                    color="orange-darken-2"
+                    variant="outlined"
+                    prepend-icon="mdi-information"
+                    size="small"
+                    class="px-4"
+                  >
+                    Detalhes
+                  </v-btn>
+                  <v-btn
+                    color="orange-darken-2"
+                    prepend-icon="mdi-hospital-building"
+                    size="small"
+                    class="px-4"
+                  >
+                    Buscar Clínica
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-container>
+      </div>
+    </v-main>
+    <AppFooter />
+  </div>
 </template>
 
 <script>
 export default {
-  data: () => ({
-    doencas: [
-      {
-        name: 'ALERGIAS',
-        description:
-          'A alergia alimentar é uma resposta imunológica exacerbada do sistema imune do animal a uma determinada substância presente em alimentos, podendo causar ferimentos na pele, quadros gastrointestinais, como diarreia, e com risco de morte.',
-        phrases: {
-          sin1: 'Pode causar irritação na pele.',
-          sin2: 'Alergias podem levar a quadros gastrointestinais graves.',
-          sin3: 'Manter controle da dieta é essencial.',
-          sin4: 'Necessário evitar alimentos que causem alergia.',
-          sin5: 'Monitorar sinais de anafilaxia.',
-          sin6: 'Consultar veterinário é essencial.',
-          sin7: 'Cuidado com exposição prolongada ao alérgeno.',
+  data() {
+    return {
+      currentSection: 'doencas',
+      diseases: [
+        {
+          id: 1,
+          name: 'Alergia Alimentar',
+          symptoms: ['Coceira excessiva', 'Problemas digestivos', 'Irritação na pele'],
+          prevention: 'Evite alimentos com ingredientes alergênicos conhecidos e mantenha uma dieta equilibrada.'
         },
-      },
-      {
-        name: 'Depressão',
-        description:
-          'Um clássico para situações que afetam o comportamento do animal, requerendo cuidado e atenção do tutor e de um profissional.',
-        phrases: {
-          sin1: 'Mudança no comportamento do animal.',
-          sin2: 'Apatia ou falta de interesse em brincar.',
-          sin3: 'Perda de apetite pode ser um sinal.',
-          sin4: 'Isolamento social observado no animal.',
-          sin5: 'Consultar veterinário para diagnóstico.',
-          sin6: 'Terapia ou medicamentos podem ser necessários.',
-          sin7: 'Requer atenção e cuidado do tutor.',
+        {
+          id: 2,
+          name: 'Dermatite',
+          symptoms: ['Vermelhidão na pele', 'Descamação', 'Coceira intensa'],
+          prevention: 'Mantenha a higiene adequada e use produtos específicos para pets.'
         },
-      },
-      {
-        name: 'Insuficiência Renal',
-        description:
-          'Uma condição médica em que os rins não conseguem filtrar os resíduos do sangue de forma eficiente.',
-        phrases: {
-          sin1: 'Dificuldade para urinar.',
-          sin2: 'Presença de sangue na urina.',
-          sin3: 'Letargia e fraqueza no animal.',
-          sin4: 'Vômitos frequentes podem ocorrer.',
-          sin5: 'Manter hidratação adequada.',
-          sin6: 'Acompanhamento veterinário regular é crucial.',
-          sin7: 'Pode levar a complicações sérias se não tratada.',
+        {
+          id: 3,
+          name: 'Parasitas Intestinais',
+          symptoms: ['Diarreia', 'Vômitos', 'Perda de peso'],
+          prevention: 'Vermifugação regular e cuidados com a alimentação.'
         },
-      },
-      {
-        name: 'Doença do carrapato',
-        description:
-          'Uma infecção causada por parasitas transmitidos por carrapatos. Pode causar febre, anemia e em casos graves levar à morte.',
-        phrases: {
-          sin1: 'Febre persistente é um sintoma comum.',
-          sin2: 'Perda de apetite e letargia.',
-          sin3: 'Pode causar anemia grave.',
-          sin4: 'Sinais de sangramento precisam de atenção.',
-          sin5: 'Remoção imediata do carrapato é essencial.',
-          sin6: 'Tratamento com medicamentos específicos.',
-          sin7: 'Evitar áreas infestadas por carrapatos.',
+        {
+          id: 4,
+          name: 'Parasitas Intestinais',
+          symptoms: ['Diarreia', 'Vômitos', 'Perda de peso'],
+          prevention: 'Vermifugação regular e cuidados com a alimentação.'
         },
-      },
-    ],
-  }),
+      ]
+    }
+  },
   methods: {
     getPhrase(item, key) {
       return item?.phrases?.[key] || 'Informação não disponível';
@@ -126,19 +120,26 @@ export default {
 
 <style scoped>
 .main-background {
-  background-color: #ffcbef;
-  height: 120vh;
-}
-.card1 {
   background-color: white;
-  color: black;
-  font-size: 18px;
+  min-height: 100vh;
 }
-.lista {
+.card-disease{
   background-color: white;
-  color: black;
 }
-.texto {
-  font-size: 18px;
+/* Estilos adicionais para melhorar a aparência */
+.v-card-title {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
-</style>
+
+.v-list-item {
+  min-height: 36px;
+}
+
+.text-h6 {
+  color: #424242;
+}
+
+.text-body-1 {
+  color: #616161;
+}
+</style>  

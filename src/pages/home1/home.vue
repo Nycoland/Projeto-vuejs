@@ -1,6 +1,6 @@
 <template>
     <v-app>
-      <AppHeader2></AppHeader2>
+      <AppHeader1></AppHeader1>
       <v-container>
         
       </v-container>
@@ -109,7 +109,6 @@
   </template>
   
   <script setup>
-import AppHeader2 from '@/components/AppHeader2.vue';
 import AppFooter from '@/components/AppFooter.vue';
 
     //
