@@ -68,7 +68,9 @@
                   {{ clinic.name }}
                 </v-card-title>
               </v-img>
-              
+              <v-card-text>
+                <p>ID:{{ clinic.id }}</p>
+              </v-card-text>
               <v-card-text class="pa-4">
                 <div class="d-flex align-center mb-3">
                   <v-rating
@@ -169,78 +171,110 @@
   </div>
 </template>
 
-<script setup>
-import { ref, computed } from 'vue';
-
-const searchQuery = ref('');
-const showAddClinic = ref(false);
-const newClinic = ref({
-  name: '',
-  location: '',
-  description: '',
-  rating: 0,
-  image: null
-});
-
-const clinics = ref([
-  {
-    id: 1,
-    name: 'Clínica Veterinária Popular CVP',
-    location: 'Centro, Teresina-PI',
-    rating: 4.5,
-    description: 'Atendimento veterinário completo com preços acessíveis.',
-    image: 'https://lh3.googleusercontent.com/p/AF1QipMIirvnLWiCFKBvVjSlWbeTXMjayx_3K_ht4x8p=s680-w680-h510-rw'
+<script>
+export default{
+  data(){
+    return {
+      clinics: []
+    }
   },
-  {
-    id: 2,
-    name: 'Pet Care Hospital',
-    location: 'Jóquei, Teresina-PI',
-    rating: 4.8,
-    description: 'Clínica especializada em cuidados avançados para pets.',
-    image: 'https://source.unsplash.com/random/600x400/?animal,hospital'
+
+  mounted(){
+    this.fetchClinics()
   },
-  {
-    id: 3,
-    name: 'Vet Center',
-    location: 'Noivos, Teresina-PI',
-    rating: 4.2,
-    description: 'Atendimento 24 horas com equipe especializada.',
-    image: 'https://source.unsplash.com/random/600x400/?pet,clinic'
+
+  methods: {
+    async fetchClinics() {
+      try{
+        const response = await fetch('http://127.0.0.1:8000/clinicas')
+        const data = await response.json()
+        
+        this.clinics = data
+
+        console.log("fucionou tlgd", data)
+      }catch(error){
+        console.error("ops", error)
+      }
+    }
   }
-]);
 
-const filteredClinics = computed(() => {
-  if (!searchQuery.value) return clinics.value;
-  const query = searchQuery.value.toLowerCase();
-  return clinics.value.filter(clinic => 
-    clinic.name.toLowerCase().includes(query) || 
-    clinic.location.toLowerCase().includes(query) ||
-    clinic.description.toLowerCase().includes(query)
-  );
-});
-
-function addClinic() {
-  const newId = Math.max(...clinics.value.map(c => c.id)) + 1;
-  clinics.value.push({
-    id: newId,
-    name: newClinic.value.name,
-    location: newClinic.value.location,
-    description: newClinic.value.description,
-    rating: 0,
-    image: null
-  });
-  
-  // Reset form
-  newClinic.value = {
-    name: '',
-    location: '',
-    description: '',
-    rating: 0,
-    image: null
-  };
-  
-  showAddClinic.value = false;
 }
+
+
+
+
+
+// import { ref, computed } from 'vue';
+
+// const searchQuery = ref('');
+// const showAddClinic = ref(false);
+// const newClinic = ref({
+//   name: '',
+//   location: '',
+//   description: '',
+//   rating: 0,
+//   image: null
+// });
+
+// const clinics = ref([
+//   {
+//     id: 1,
+//     name: 'Clínica Veterinária Popular CVP',
+//     location: 'Centro, Teresina-PI',
+//     rating: 4.5,
+//     description: 'Atendimento veterinário completo com preços acessíveis.',
+//     image: 'https://lh3.googleusercontent.com/p/AF1QipMIirvnLWiCFKBvVjSlWbeTXMjayx_3K_ht4x8p=s680-w680-h510-rw'
+//   },
+//   {
+//     id: 2,
+//     name: 'Pet Care Hospital',
+//     location: 'Jóquei, Teresina-PI',
+//     rating: 4.8,
+//     description: 'Clínica especializada em cuidados avançados para pets.',
+//     image: 'https://source.unsplash.com/random/600x400/?animal,hospital'
+//   },
+//   {
+//     id: 3,
+//     name: 'Vet Center',
+//     location: 'Noivos, Teresina-PI',
+//     rating: 4.2,
+//     description: 'Atendimento 24 horas com equipe especializada.',
+//     image: 'https://source.unsplash.com/random/600x400/?pet,clinic'
+//   }
+// ]);
+
+// const filteredClinics = computed(() => {
+//   if (!searchQuery.value) return clinics.value;
+//   const query = searchQuery.value.toLowerCase();
+//   return clinics.value.filter(clinic => 
+//     clinic.name.toLowerCase().includes(query) || 
+//     clinic.location.toLowerCase().includes(query) ||
+//     clinic.description.toLowerCase().includes(query)
+//   );
+// });
+
+// function addClinic() {
+//   const newId = Math.max(...clinics.value.map(c => c.id)) + 1;
+//   clinics.value.push({
+//     id: newId,
+//     name: newClinic.value.name,
+//     location: newClinic.value.location,
+//     description: newClinic.value.description,
+//     rating: 0,
+//     image: null
+//   });
+  
+//   // Reset form
+//   newClinic.value = {
+//     name: '',
+//     location: '',
+//     description: '',
+//     rating: 0,
+//     image: null
+//   };
+  
+//   showAddClinic.value = false;
+// }
 </script>
 
 <style scoped>

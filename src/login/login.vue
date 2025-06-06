@@ -236,20 +236,29 @@
 }
 </style>
 
+
 <script>
+import auth from '@/services/auth';
+
 export default {
-  name: 'Login',
+  name: 'LoginPage',
+  
   data() {
     return {
       email: '',
       password: '',
+      emailRules: [
+        v => !!v || 'E-mail é obrigatório',
+        v => /.+@.+\..+/.test(v) || 'E-mail deve ser válido'
+      ],
+      passwordRules: [
+        v => !!v || 'Senha é obrigatória',
+        v => (v && v.length >= 6) || 'Senha deve ter pelo menos 6 caracteres'
+      ],
       showPassword: false,
       rememberMe: false,
       loading: false,
       showRegisterDialog: false,
-      showSnackbar: false,
-      snackbarMessage: '',
-      snackbarColor: 'success',
       registerForm: {
         name: '',
         cpf: '',
@@ -259,50 +268,95 @@ export default {
         password: '',
         confirmPassword: ''
       },
-      emailRules: [
-        v => !!v || 'E-mail é obrigatório',
-        v => /.+@.+\..+/.test(v) || 'E-mail deve ser válido'
-      ],
-      passwordRules: [
-        v => !!v || 'Senha é obrigatória',
-        v => (v && v.length >= 6) || 'Senha deve ter pelo menos 6 caracteres'
-      ]
+      showSnackbar: false,
+      snackbarMessage: '',
+      snackbarColor: 'success'
     };
   },
+
   computed: {
     isFormValid() {
-      return this.email &&
-             this.password &&
-             /.+@.+\..+/.test(this.email) &&
-             this.password.length >= 6;
+      return this.email && 
+             this.password && 
+             this.emailRules.every(rule => rule(this.email) === true) &&
+             this.passwordRules.every(rule => rule(this.password) === true);
     }
   },
-  methods: {
-    async login() {
-      this.loading = true;
-      setTimeout(() => {
-        this.loading = false;
-        this.showMessage('Login realizado com sucesso!', 'success');
-        console.log('Redirecionando para o dashboard...');
-      }, 2000);
-    },
+
+methods: {
+  async login() {
+    try {
+      const response = await axios.post('http://localhost:3000/api/auth/login', {
+        email: this.email,
+        password: this.password
+      });
+      
+      // Salva o token no localStorage
+      localStorage.setItem('userToken', response.data.token);
+      
+      // Redireciona após login bem-sucedido
+      this.$router.push('/PagInicial');
+    } catch (error) {
+      console.error("Erro no login:", error.response.data);
+      alert("Login falhou: " + (error.response.data.message || "Credenciais inválidas"));
+    }
+  }
+},
+    
     async register() {
-      if (this.registerForm.password !== this.registerForm.confirmPassword) {
-        this.showMessage('As senhas não coincidem!', 'error');
-        return;
+      try {
+        this.loading = true;
+        
+        // Validação simples de senha
+        if (this.registerForm.password !== this.registerForm.confirmPassword) {
+          throw { message: 'As senhas não coincidem' };
+        }
+        
+        const userData = {
+          name: this.registerForm.name,
+          email: this.registerForm.email,
+          password: this.registerForm.password,
+          cpf: this.registerForm.cpf,
+          birthDate: this.registerForm.birthDate,
+          phone: this.registerForm.phone
+        };
+        
+        await auth.register(userData);
+        
+        this.showNotification('Cadastro realizado com sucesso! Faça login.', 'success');
+        this.showRegisterDialog = false;
+        this.resetRegisterForm();
+        
+      } catch (error) {
+        this.showNotification(
+          error.message || 'Erro ao cadastrar. Tente novamente.', 
+          'error'
+        );
+      } finally {
+        this.loading = false;
       }
-      this.showMessage('Cadastro realizado com sucesso!', 'success');
-      this.showRegisterDialog = false;
-      this.resetRegisterForm();
     },
-    socialLogin(provider) {
-      this.showMessage(`Login com ${provider} em desenvolvimento`, 'info');
+    
+    async socialLogin(provider) {
+      try {
+        this.loading = true;
+        await auth.socialLogin(provider);
+      } catch (error) {
+        this.showNotification(
+          `Erro ao conectar com ${provider}. Tente novamente.`, 
+          'error'
+        );
+      } finally {
+        this.loading = false;
+      }
     },
-    showMessage(message, color) {
+    
+    showNotification(message, color) {
       this.snackbarMessage = message;
       this.snackbarColor = color;
       this.showSnackbar = true;
     },
+    
     resetRegisterForm() {
       this.registerForm = {
         name: '',
@@ -315,6 +369,6 @@ export default {
       };
     }
   }
-};
+
 </script>
 
