@@ -69,11 +69,11 @@
                 </v-card-title>
               </v-img>
               <v-card-text>
-                <p>ID:{{ clinic.id }}</p>
+                <p>{{ clinic.id }}</p>
               </v-card-text>
               <v-card-text class="pa-4">
                 <div class="d-flex align-center mb-3">
-                  <v-rating
+                  <!-- <v-rating
                     v-model="clinic.rating"
                     color="amber"
                     density="compact"
@@ -81,10 +81,10 @@
                     readonly
                     size="small"
                     class="mr-2"
-                  ></v-rating>
-                  <span class="text-body-1 text-grey-darken-2">
-                    ({{ clinic.rating.toFixed(1) }})
-                  </span>
+                  ></v-rating> -->
+                  <!-- <span class="text-body-1 text-grey-darken-2">
+                    ({{ clinic.rating }})
+                  </span> -->
                 </div>
                 
                 <div class="d-flex align-center mb-3">
@@ -92,9 +92,9 @@
                   <span class="text-body-1 text-grey-darken-2">{{ clinic.location }}</span>
                 </div>
                 
-                <p class="text-body-1 text-grey-darken-3 mb-0">
+                <!-- <p class="text-body-1 text-grey-darken-3 mb-0">
                   {{ clinic.description }}
-                </p> 
+                </p>  -->
               </v-card-text> 
               
               <v-card-actions class="px-4 pb-4">
@@ -131,7 +131,7 @@
               </v-btn>
             </v-card-title>
             <v-card-text>
-              <v-form @submit.prevent="addClinic">
+              <v-form ref="form" @submit.prevent="addClinic">
                 <v-text-field
                   v-model="newClinic.name"
                   label="Nome da Clínica"
@@ -141,17 +141,38 @@
                 
                 <v-text-field
                   v-model="newClinic.location"
-                  label="Localização"
+                  label="Endereço"
                   required
                   class="mb-4"
                 ></v-text-field>
                 
-                <v-textarea
-                  v-model="newClinic.description"
-                  label="Descrição"
-                  rows="2"
+                <v-text-field
+                  v-model="newClinic.email"
+                  label="E-mail"
+                  required
+                  :rules="emailRules"
                   class="mb-4"
-                ></v-textarea>
+                ></v-text-field>
+
+                <v-text-field
+                  v-model="newClinic.phone"
+                  label="Telefone"
+                  required
+                  :rules="phoneRules"
+                  @blur="formatPhone"
+                  class="mb-4"
+                ></v-text-field>
+
+                <v-file-input
+                  v-model="newClinic.imageFile"
+                  label="Imagem da Clínica"
+                  prepend-icon="mdi-camera"
+                  accept="image/*"
+                  ref="fileInput" 
+                  class="mb-4"
+                ></v-file-input>
+
+
                 
                 <v-btn 
                   color="primary" 
@@ -172,109 +193,191 @@
 </template>
 
 <script>
-export default{
-  data(){
+import axios from 'axios';
+
+export default {
+  data() {
     return {
-      clinics: []
-    }
+      clinics: [], // Inicializado como array vazio
+      searchQuery: '',
+      showAddClinic: false,
+      loading: false,
+      newClinic: {
+        name: '',
+        email: '',
+        location: '',
+        phone: '',
+        // rating: 0, 
+        image: null,
+        imageFile: null
+      },
+      emailRules: [
+        v => !!v || 'E-mail é obrigatório',
+        v => /.+@.+\..+/.test(v) || 'E-mail deve ser válido'
+      ],
+      phoneRules: [
+        v => !!v || 'Telefone é obrigatório',
+        v => (v && v.length >= 11) || 'Telefone deve ter pelo menos 10 dígitos'
+      ]
+    };
   },
 
-  mounted(){
-    this.fetchClinics()
+  computed: {
+    filteredClinics() {
+      if (!this.searchQuery) return this.clinics;
+
+      const query = this.searchQuery.toLowerCase();
+      return this.clinics.filter(clinic =>
+        clinic.name?.toLowerCase().includes(query) ||
+        clinic.location?.toLowerCase().includes(query) ||
+        clinic.description?.toLowerCase().includes(query)
+      );
+    },
+  },
+
+  mounted() {
+    this.fetchClinics();
   },
 
   methods: {
-    async fetchClinics() {
-      try{
-        const response = await fetch('http://127.0.0.1:8000/clinicas')
-        const data = await response.json()
-        
-        this.clinics = data
-
-        console.log("fucionou tlgd", data)
-      }catch(error){
-        console.error("ops", error)
-      }
+async fetchClinics() {
+  try {
+    this.loading = true;
+    const response = await axios.get('http://127.0.0.1:8000/api/clinicas');
+    
+    console.log('Resposta completa da API:', response); // Debug
+    
+    // Verificação profunda dos dados
+    if (!response || !response.data) {
+      throw new Error('Resposta inválida da API');
     }
+        try {
+      // Verifica se há dados no localStorage
+      const cachedClinics = localStorage.getItem('cachedClinics');
+      if (cachedClinics) {
+        this.clinics = JSON.parse(cachedClinics);
+      }
+
+      const response = await axios.get('http://127.0.0.1:8000/api/clinicas');
+      this.clinics = response.data;
+      
+      // Salva no localStorage
+      localStorage.setItem('cachedClinics', JSON.stringify(this.clinics));
+      
+    } catch (error) {
+      console.error("Erro:", error);
+    }
+  
+    // Mapeamento seguro com fallbacks
+    this.clinics = (Array.isArray(response.data) ? response.data : [response.data]
+      .map(clinic => ({
+        id: clinic.id || null,
+        name: clinic.nome || 'Clínica sem nome',
+        email: clinic.email || '',
+        location: clinic.endereco ||'',
+        phone: clinic.telefone || '',
+        image: this.getImageUrl(clinic.image) // Função para tratar URLs de imagem
+      })));
+
+    console.log('Clínicas processadas:', this.clinics);// Debug
+
+  } catch (error) {
+    console.error("Erro detalhado:", error);
+    this.$toast.error('Erro ao carregar clínicas');
+    this.clinics = [];
+  } finally {
+    this.loading = false;
   }
+},
 
-}
+  getImageUrl(imagePath) {
+    if (!imagePath) return null;
+    // Se for um caminho local, transforma em URL completa
+    if (imagePath.startsWith('/tmp/') || imagePath.startsWith('storage/')) {
+      return `http://127.0.0.1:8000/${imagePath}`;
+    }
+    return imagePath;
+  },
+  // ... outros métodos
 
+    formatPhone() {
+      if (this.newClinic.phone) {
+        this.newClinic.phone = this.newClinic.phone.replace(/\D/g, '');
+      }
+    },
 
+   async addClinic() {
+     try {
+       // Validação do formulário
+       if (!this.$refs.form || !(await this.$refs.form.validate())) {
+         return;
+       }
+       
+       this.loading = true;
+       
+       const formData = new FormData();
+       formData.append('name', this.newClinic.name);
+       formData.append('email', this.newClinic.email);
+       formData.append('location', this.newClinic.location);
+       formData.append('phone', this.newClinic.phone);
+       
+       if (this.newClinic.imageFile) {
+         formData.append('image', this.newClinic.imageFile);
+       }
 
+       const response = await axios.post('http://127.0.0.1:8000/api/clinicas', formData, {
+         headers: {
+           'Content-Type': 'multipart/form-data'
+         }
+       });
 
+       // Adiciona a nova clínica à lista
+       this.clinics.push(response.data);
+       
+       // Atualiza a lista de clínicas
+       await this.fetchClinics(); // Chame a função para atualizar a lista
+       
+       this.closeDialog();
+      //  this.$toast.suc('Clínica adicionada com sucesso!');
+     } catch (error) {
+       console.error("Erro ao adicionar clínica:", error);
+       this.$toast.error('Erro ao adicionar clínica');
+     } finally {
+       this.loading = false;
+     }
+   },
+   
+    closeDialog() {
+      this.showAddClinic = false;
+      if (this.$refs.form) {
+        this.$refs.form.reset();
+      }
+      // Limpa o input de arquivo manualmente
+      this.newClinic = {
+        name: '',
+        email: '',
+        location: '',
+        phone: '',
+        // description: '',
+        // rating: 0,
+        image: null,
+        imageFile: null
+      };
+    },
 
-// import { ref, computed } from 'vue';
+    showClinicDetails(clinic) {
+      // Implemente a navegação ou diálogo de detalhes
+      this.$toast.info(`Detalhes da clínica ${clinic.name}`);
+      // this.$router.push(`/clinicas/${clinic.id}`);
+    },
 
-// const searchQuery = ref('');
-// const showAddClinic = ref(false);
-// const newClinic = ref({
-//   name: '',
-//   location: '',
-//   description: '',
-//   rating: 0,
-//   image: null
-// });
-
-// const clinics = ref([
-//   {
-//     id: 1,
-//     name: 'Clínica Veterinária Popular CVP',
-//     location: 'Centro, Teresina-PI',
-//     rating: 4.5,
-//     description: 'Atendimento veterinário completo com preços acessíveis.',
-//     image: 'https://lh3.googleusercontent.com/p/AF1QipMIirvnLWiCFKBvVjSlWbeTXMjayx_3K_ht4x8p=s680-w680-h510-rw'
-//   },
-//   {
-//     id: 2,
-//     name: 'Pet Care Hospital',
-//     location: 'Jóquei, Teresina-PI',
-//     rating: 4.8,
-//     description: 'Clínica especializada em cuidados avançados para pets.',
-//     image: 'https://source.unsplash.com/random/600x400/?animal,hospital'
-//   },
-//   {
-//     id: 3,
-//     name: 'Vet Center',
-//     location: 'Noivos, Teresina-PI',
-//     rating: 4.2,
-//     description: 'Atendimento 24 horas com equipe especializada.',
-//     image: 'https://source.unsplash.com/random/600x400/?pet,clinic'
-//   }
-// ]);
-
-// const filteredClinics = computed(() => {
-//   if (!searchQuery.value) return clinics.value;
-//   const query = searchQuery.value.toLowerCase();
-//   return clinics.value.filter(clinic => 
-//     clinic.name.toLowerCase().includes(query) || 
-//     clinic.location.toLowerCase().includes(query) ||
-//     clinic.description.toLowerCase().includes(query)
-//   );
-// });
-
-// function addClinic() {
-//   const newId = Math.max(...clinics.value.map(c => c.id)) + 1;
-//   clinics.value.push({
-//     id: newId,
-//     name: newClinic.value.name,
-//     location: newClinic.value.location,
-//     description: newClinic.value.description,
-//     rating: 0,
-//     image: null
-//   });
-  
-//   // Reset form
-//   newClinic.value = {
-//     name: '',
-//     location: '',
-//     description: '',
-//     rating: 0,
-//     image: null
-//   };
-  
-//   showAddClinic.value = false;
-// }
+    contactClinic(clinic) {
+      // Implemente a lógica de contato
+      this.$toast.info(`Contatando clínica ${clinic.name}`);
+      // window.location.href = `tel:${clinic.phone}`;
+    }
+  },
+};
 </script>
 
 <style scoped>

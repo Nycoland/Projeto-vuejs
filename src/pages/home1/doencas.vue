@@ -101,12 +101,6 @@ export default {
           symptoms: ['Diarreia', 'Vômitos', 'Perda de peso'],
           prevention: 'Vermifugação regular e cuidados com a alimentação.'
         },
-        {
-          id: 4,
-          name: 'Parasitas Intestinais',
-          symptoms: ['Diarreia', 'Vômitos', 'Perda de peso'],
-          prevention: 'Vermifugação regular e cuidados com a alimentação.'
-        },
       ]
     }
   },
