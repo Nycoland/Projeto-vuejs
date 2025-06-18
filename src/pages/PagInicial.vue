@@ -34,21 +34,21 @@
             <v-col cols="12" sm="4">
               <v-card class="stats-card pa-6 text-center" elevation="8">
                 <v-icon class="mb-4">mdi-hospital-box</v-icon>
-                <h3 class="text-h4 font-weight-bold">50</h3>
+                <h3 class="text-h4 font-weight-bold">30</h3>
                 <h6 class="text-h6">Clinicas parceiras</h6>
               </v-card>
             </v-col>
             <v-col cols="12" sm="4">
               <v-card class="stats-card pa-6 text-center" elevation="8">
                 <v-icon class="mb-4">mdi-heart</v-icon>
-                <h3 class="text-h4 font-weight-bold">50</h3>
+                <h3 class="text-h4 font-weight-bold">3</h3>
                 <h6 class="text-h6">Ongs Cadastradas</h6>
               </v-card>
             </v-col>
             <v-col cols="12" sm="4">
               <v-card class="stats-card pa-6 text-center" elevation="8">
                 <v-icon class="mb-4">mdi-account-group</v-icon>
-                <h3 class="text-h4 font-weight-bold">50</h3>
+                <h3 class="text-h4 font-weight-bold">60</h3>
                 <h6 class="text-h6">Tutores Cadastrados</h6>
               </v-card>
             </v-col>
@@ -89,7 +89,7 @@
 
       <!-- carrosel de noticias -->
 
-      <section class="py-12">
+      <!-- <section class="py-12">
         <v-container>
           <h2 class="text-h3 text-center mb-8 font-weight-bold">Últimas notícias</h2>
             <v-carousel height="300" cycle>
@@ -103,7 +103,7 @@
               </v-carousel-item>
             </v-carousel>
         </v-container>
-      </section>
+      </section> -->
       </v-main>
       <AppFooter></AppFooter>
     

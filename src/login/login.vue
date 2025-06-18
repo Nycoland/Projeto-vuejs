@@ -75,7 +75,7 @@
               <!-- Cadastre-se -->
               <p class="mb-0 text-black">
                 Não tem uma conta?
-                <a href="#" class="register-link" @click="showRegisterDialog = true">
+                <a href="#" class="register-link" @click="goToRegister = true">
                   Cadastre-se aqui
                 </a>
               </p>
@@ -111,29 +111,7 @@
     </v-container>
 
     <!-- Modal de Cadastro -->
-    <v-dialog v-model="showRegisterDialog" max-width="500px">
-      <v-card>
-        <v-card-title class="text-center">
-          <span class="brand-title">Cadastre-se</span>
-        </v-card-title>
-        <v-card-text>
-          <v-form>
-            <v-text-field v-model="registerForm.name" label="Nome completo" prepend-inner-icon="mdi-account" outlined rounded></v-text-field>
-            <v-text-field v-model="registerForm.cpf" label="CPF" prepend-inner-icon="mdi-card-account-details" outlined rounded></v-text-field>
-            <v-text-field v-model="registerForm.birthDate" label="Data de nascimento" type="date" prepend-inner-icon="mdi-calendar" outlined rounded></v-text-field>
-            <v-text-field v-model="registerForm.email" label="E-mail" type="email" prepend-inner-icon="mdi-email" outlined rounded></v-text-field>
-            <v-text-field v-model="registerForm.phone" label="Celular" prepend-inner-icon="mdi-phone" outlined rounded></v-text-field>
-            <v-text-field v-model="registerForm.password" label="Senha" type="password" prepend-inner-icon="mdi-lock" outlined rounded></v-text-field>
-            <v-text-field v-model="registerForm.confirmPassword" label="Confirmação de senha" type="password" prepend-inner-icon="mdi-lock-check" outlined rounded></v-text-field>
-          </v-form>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn text @click="showRegisterDialog = false">Cancelar</v-btn>
-          <v-btn color="primary" @click="register">Cadastrar</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    
 
     <!-- Snackbar de sucesso -->
     <v-snackbar v-model="showSnackbar" :color="snackbarColor" timeout="3000">
@@ -284,9 +262,15 @@ export default {
   },
 
 methods: {
+
+  goToRegister(){
+    this.$router.push('/cadastro/cadastre2');
+  },
+
+
   async login() {
     try {
-      const response = await axios.post('http://localhost:3000/api/auth/login', {
+      const response = await axios.post('http://127.0.0.1:3000/api/login', {
         email: this.email,
         password: this.password
       });
@@ -303,40 +287,7 @@ methods: {
   }
 },
     
-    async register() {
-      try {
-        this.loading = true;
-        
-        // Validação simples de senha
-        if (this.registerForm.password !== this.registerForm.confirmPassword) {
-          throw { message: 'As senhas não coincidem' };
-        }
-        
-        const userData = {
-          name: this.registerForm.name,
-          email: this.registerForm.email,
-          password: this.registerForm.password,
-          cpf: this.registerForm.cpf,
-          birthDate: this.registerForm.birthDate,
-          phone: this.registerForm.phone
-        };
-        
-        await auth.register(userData);
-        
-        this.showNotification('Cadastro realizado com sucesso! Faça login.', 'success');
-        this.showRegisterDialog = false;
-        this.resetRegisterForm();
-        
-      } catch (error) {
-        this.showNotification(
-          error.message || 'Erro ao cadastrar. Tente novamente.', 
-          'error'
-        );
-      } finally {
-        this.loading = false;
-      }
-    },
-    
+   
     async socialLogin(provider) {
       try {
         this.loading = true;
