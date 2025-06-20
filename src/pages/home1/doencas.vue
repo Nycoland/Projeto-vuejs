@@ -8,7 +8,112 @@
             <v-icon class="mr-1" color="#7681f8">mdi-alert</v-icon>
             Guia de Doenças
           </h1>
-          
+          <p class="text-body-1 mb-6">
+            Conheça as principais doenças que podem afetar seu pet, seus sintomas e como preveni-las.
+          </p>
+
+          <!-- Barra de pesquisa -->
+
+          <v-row class="mb-6 ">
+            <v-col cols="12" md="6" lg="4">
+              <v-text-field
+                v-model="searchQuery"
+                class="searchBar"
+                label="Pesquisar Doenças"
+                prepend-inner-icon="mdi-magnify"
+                variant= "outlined"
+                clearable
+                hide-details
+                density="comfortable"
+                bg-color="grey-lighten-4"
+
+              />
+            </v-col>
+            <v-col cols="12" md="4">
+              <v-btn
+                color="#667eea"
+                prepend-icon="mdi-plus"
+                size="large"
+                class="px-4"
+                block
+                @click=""              
+            >
+              Adicionar Doença
+
+              </v-btn>
+            </v-col>
+            <v-dialog v-model="showAddDisease" max-width="600">
+          <v-card class="card-add-disease">
+            <v-card-title class="d-flex justify-space-between align-center">
+              <span class="text-h5">Adicionar Nova Doença</span>
+              <v-btn icon @click="showAddDisease = false">
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </v-card-title>
+            <v-card-text>
+              <v-form ref="form" @submit.prevent="addDisease">
+                <v-text-field
+                  v-model="newDisease.name"
+                  label="Nome da Doença"
+                  required
+                  class="mb-4"
+                ></v-text-field>
+                
+                <v-text-field
+                  v-model="newDisease.sintomas"
+                  label="Sintomas"
+                  required
+                  class="mb-4"
+                ></v-text-field>
+                
+                <v-text-field
+                  v-model="newDisease.grau"
+                  label="Grau de Gravidade"
+                  required
+                  class="mb-4"
+                ></v-text-field>
+                
+                <v-text-field
+                  v-model="newDisease.prevention"
+                  label="Prevenção"
+                  required
+                  class="mb-4"
+                ></v-text-field>
+
+                <v-btn 
+                  color="primary" 
+                  type="submit" 
+                  block 
+                  size="large"
+                >
+                  Adicionar Doença
+                </v-btn>
+              </v-form>
+            </v-card-text>
+          </v-card>
+        </v-dialog>
+            <!-- <v-col cols="12" md="6" lg="4">
+              <v-select
+                v-model="selectedType"
+                :items="['Todas', 'Doenças Comuns', 'Doenças Raras']"
+                label="Tipo de Doença"
+                outlined
+                dense
+                bg-color="white"
+              />
+            </v-col>
+            <v-col cols="12" md="6" lg="4">
+              <v-select
+                v-model="selectedSeverity"  
+                :items="['Todas', 'Leve', 'Moderada', 'Grave']"
+                label="Gravidade"
+                outlined
+                dense
+                bg-color="white"
+              />
+            </v-col> -->
+          </v-row>    
+
           <v-row>
             <v-col v-for="disease in diseases" :key="disease.id" cols="12" md="6" lg="4">
               <v-card class="card-disease h-100" elevation="6" rounded="lg">
@@ -49,7 +154,7 @@
                 </v-card-text>
 
                 <v-card-actions class="px-4 pb-4 justify-space-between">
-                  <v-btn
+                  <!-- <v-btn
                     color="orange-darken-2"
                     variant="outlined"
                     prepend-icon="mdi-information"
@@ -57,14 +162,24 @@
                     class="px-4"
                   >
                     Detalhes
-                  </v-btn>
+                  </v-btn> -->
                   <v-btn
                     color="orange-darken-2"
                     prepend-icon="mdi-hospital-building"
                     size="small"
                     class="px-4"
+                    variant="outlined"
                   >
                     Buscar Clínica
+                  </v-btn>
+
+                    <v-btn
+                    color="orange-darken-2"
+                    prepend-icon="mdi-square-edit-outline"
+                    size="small"
+                    class="px-4"
+                    >
+                      Editar
                   </v-btn>
                 </v-card-actions>
               </v-card>
@@ -82,6 +197,8 @@ export default {
   data() {
     return {
       currentSection: 'doencas',
+      searchQuery: '',
+      showAddDisease: false,
       diseases: [
         {
           id: 1,
@@ -109,6 +226,8 @@ export default {
       return item?.phrases?.[key] || 'Informação não disponível';
     },
   },
+
+  
 };
 </script>
 
@@ -119,12 +238,17 @@ export default {
 }
 .card-disease{
   background-color: white;
+  /* width: px; */
 }
 /* Estilos adicionais para melhorar a aparência */
 .v-card-title {
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
+.searchBar {
+  background-color: #f5f5f5;
+  border-radius: 8px;
+}
 .v-list-item {
   min-height: 36px;
 }
