@@ -64,4 +64,17 @@ const router = createRouter({
   routes,
 });
 
+router.beforeEach(async (to, from, next) => {
+    if (to.meta.requiresAuth) {
+        try {
+            await api.get('/api/user');
+            next();
+        } catch (error) {
+            next('/');
+        }
+    } else {
+        next();
+    }
+});
+
 export default router;

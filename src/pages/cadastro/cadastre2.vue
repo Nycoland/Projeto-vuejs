@@ -127,6 +127,9 @@
 </template>
 
 <script>
+import axios from 'axios';
+axios.defaults.baseURL = 'http://localhost:8000'; // Ajuste conforme necessário
+
 export default {
   data() {
     return {
@@ -162,27 +165,41 @@ export default {
   },
   
   methods: {
-    register() {
+    async register() {
       if (!this.valid || !this.form.acceptTerms) return;
       
-      this.loading = true;
-      
-      // Simular registro
-      setTimeout(() => {
-        this.loading = false;
-      
+      try {
+        this.loading = true;
+        const response = await axios.post('/api/cadastro/cadastre2', {
+          name: this.form.name,
+          email: this.form.email,
+          password: this.form.password
+
+        }, {
+          headers: {
+            'Content-Type': 'application/json', 
+            'Accept': 'application/json'
+          }
+        });
+          
         this.showMessage('Cadastro realizado com sucesso!', 'success');
-      }, 2000);
+        // Redirecionar ou fazer outra ação após sucesso
+        
+      } catch (error) {
+        console.error("Erro no registro:", error.response);
+        const errorMsg = error.response?.data?.message || "Erro ao registrar. Tente novamente.";
+        this.showMessage(errorMsg, 'error');
+      } finally {
+        this.loading = false;
+      }
     },
     
     goBack() {
-      this.$router.push('/login'); // Navegar para a página inicial ou anterior
-      console.log('Voltar');
+      this.$router.push('/login');
     },
     
     goToLogin() {
-      // Implemente a navegação para login
-      console.log('Ir para login');
+      this.$router.push('/login');
     },
     
     showMessage(message, color) {

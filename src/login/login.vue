@@ -270,7 +270,7 @@ methods: {
 
   async login() {
     try {
-      const response = await axios.post('http://127.0.0.1:3000/api/login', {
+      const response = await axios.post('http://127.0.0.1:8000/api/login', {
         email: this.email,
         password: this.password
       });
@@ -308,17 +308,20 @@ methods: {
       this.showSnackbar = true;
     },
     
-    resetRegisterForm() {
-      this.registerForm = {
-        name: '',
-        cpf: '',
-        birthDate: '',
-        email: '',
-        phone: '',
-        password: '',
-        confirmPassword: ''
-      };
-    }
+  // async register() {
+  //     try {
+  //       this.loading = true;
+  //       const response = await axios.post('http://localhost:8000/api/home1/cadastre2', {
+  //         email: this.registerForm.email,
+  //         password: this.registerForm.password
+  //       });
+  // }catch (error) {
+  //       console.error("Erro no registro:", error.response.data);
+  //       this.showNotification("Erro ao registrar: " + (error.response.data.message || "Tente novamente"), 'error');
+  //     } finally {
+  //       this.loading = false;
+  //     }
+  //   }
   }
 
 </script>

@@ -20,7 +20,7 @@
           <v-col cols="12" md="8">
             <v-text-field
               v-model="searchQuery"
-              class="barra-pesquisa"
+              class="seachBar"
               prepend-inner-icon="mdi-magnify"
               label="Buscar clínicas..."
               variant="outlined"
@@ -32,7 +32,7 @@
           </v-col>
           <v-col cols="12" md="4"> 
             <v-btn 
-              color="primary" 
+              color="#667eea" 
               size="large" 
               block 
               @click="showAddClinic = true"
@@ -396,7 +396,7 @@ async fetchClinics() {
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
 }
 
-.barra-pesquisa {
+.searchBar {
   background-color: white;
   border-radius: 8px;
 }
